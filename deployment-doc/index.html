@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="计算巢是阿里云开放给企业应用服务商的服务管理平台。服务商能够在计算巢上发布私有化部署服务，为其客户提供云上软件一键部署的能力；同时也支持全托管模式的服务，赋能服务商托管其客户资源。">
+  <title>OpenObserve 社区版 部署文档 - Aliyun 计算巢 x Demo</title>
+
+  <link rel="shortcut icon" href="../img/favicon.ico">
+
+  <link rel="stylesheet" href="https://unpkg.com/purecss@1.0.0/build/pure-min.css">
+  <link rel="stylesheet" href="../css/theme.css">
+  
+
+  
+
+  
+  
+
+  
+    <script src="../search/main.js"></script>
+  
+
+  
+
+  <script src="../js/highlight.min.js"></script>
+  <script>hljs.highlightAll();</script>
+</head>
+
+<body>
+  <div class="container">
+    <div class="nav">
+      <div class="nav-inner">
+        <div class="logo">
+          <img src="./img/logo-2x.png">
+        </div>
+        <div class="nav-list">
+          <ul>
+          
+              <li><a href="#openobserve">OpenObserve 社区版 部署文档</a></li>
+              
+                  <li><a href="#_1">概述</a></li>
+                  
+              
+                  <li><a href="#_2">部署流程</a></li>
+                  
+                      <li class="li-h3"><a href="#1">1. 创建服务实例</a></li>
+                  
+                      <li class="li-h3"><a href="#2">2. 确认订单并创建</a></li>
+                  
+                      <li class="li-h3"><a href="#3">3. 等待部署完成</a></li>
+                  
+                      <li class="li-h3"><a href="#4">4. 登录服务</a></li>
+                  
+              
+                  <li><a href="#_3">数据接入</a></li>
+                  
+                      <li class="li-h3"><a href="#1_1">1. 获取上报地址与令牌</a></li>
+                  
+                      <li class="li-h3"><a href="#2_1">2. 查询与检索日志</a></li>
+                  
+              
+                  <li><a href="#_4">官方文档</a></li>
+                  
+              
+          
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="content theme-github">
+      
+      <div class="content-inner">        
+        
+        <h1 id="openobserve">OpenObserve 社区版 部署文档</h1>
+<h2 id="_1">概述</h2>
+<p>OpenObserve 社区版 是一款用 Rust 构建的开源可观测性平台，单二进制即可运行，统一管理日志、指标、链路追踪与前端 RUM 数据。原生兼容 OpenTelemetry，采用 Parquet 列式存储降低存储成本，支持 SQL 与 PromQL 查询、可视化仪表盘、告警通知与多租户数据隔离。通过阿里云计算巢服务，您可以快速部署 OpenObserve 社区版，实现开箱即用。</p>
+<h2 id="_2">部署流程</h2>
+<h3 id="1">1. 创建服务实例</h3>
+<p>访问 OpenObserve 社区版 服务部署链接，按提示填写部署参数：</p>
+<p><a href="https://computenest.console.aliyun.com/service/instance/create/cn-hangzhou?type=user&amp;ServiceId=service-65783222efa542d5be9b">部署链接</a></p>
+<p><img alt="创建服务实例" src="../images/create-instance.png" /></p>
+<p>需要填写的主要参数包括：</p>
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>实例类型</td>
+<td>建议选择 2 vCPU / 8 GiB 及以上规格（如 <code>ecs.u1-c1m4.large</code>）</td>
+</tr>
+<tr>
+<td>实例密码</td>
+<td>ECS 服务器登录密码，长度 8-30 位</td>
+</tr>
+<tr>
+<td>可用区 / 专有网络</td>
+<td>保持默认即可，将自动新建 VPC 与交换机</td>
+</tr>
+<tr>
+<td>管理员邮箱</td>
+<td>OpenObserve 控制台的登录账号，默认 <code>admin@example.com</code></td>
+</tr>
+<tr>
+<td>管理员密码</td>
+<td>OpenObserve 控制台的登录密码，8-30 位，须同时包含小写字母、大写字母、数字和特殊字符</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>管理员邮箱与管理员密码即为登录 OpenObserve 控制台的凭据，请妥善保存。</p>
+</blockquote>
+<h3 id="2">2. 确认订单并创建</h3>
+<p>参数填写完成后可以看到对应询价明细，确认参数后点击 <strong>下一步：确认订单</strong>。确认订单完成后同意服务协议并点击 <strong>立即创建</strong> 进入部署阶段。</p>
+<h3 id="3">3. 等待部署完成</h3>
+<p>等待部署完成后进入服务实例管理，在控制台找到 OpenObserve 社区版 访问链接。实例详情页的 <strong>立即使用</strong> 模块中会展示 <code>openobserve_5080_url</code> 访问地址，以及数据接入端口说明（OTLP HTTP 与 Web 控制台共用 5080 端口，OTLP gRPC 使用 5081 端口）。</p>
+<p><img alt="服务实例详情" src="../images/instance-detail.png" /></p>
+<h3 id="4">4. 登录服务</h3>
+<p>单击 <code>openobserve_5080_url</code> 链接访问服务，进入 OpenObserve 登录页。</p>
+<p><img alt="登录页面" src="../images/login-page.png" /></p>
+<p>输入部署时填写的<strong>管理员邮箱</strong>与<strong>管理员密码</strong>，点击 <strong>登录</strong> 即可进入 OpenObserve 控制台首页。首次登录时尚无数据写入，页面会引导您接入第一个数据源。</p>
+<p><img alt="服务首页" src="../images/service-page.png" /></p>
+<h2 id="_3">数据接入</h2>
+<h3 id="1_1">1. 获取上报地址与令牌</h3>
+<p>在左侧导航栏选择 <strong>数据 → 数据源</strong>，切换到 <strong>自定义</strong> 页签，即可按数据类型（日志 / 指标 / 追踪）和采集器类型（Curl、Filebeat、FluentBit、Fluentd、Vector、OTEL Collector、Logstash 等）查看对应的上报地址与接入示例。页面右上角的 <strong>管理令牌</strong> 可查看和轮换接入令牌。</p>
+<p><img alt="数据接入页面" src="../images/ingestion.png" /></p>
+<p>以 <strong>日志 → Curl</strong> 为例，复制页面中的命令即可完成一次日志上报（将令牌替换为您自己实例的值）：</p>
+<pre><code class="language-bash">curl -u admin@example.com:&lt;YOUR_INGEST_TOKEN&gt; -k \
+  http://&lt;实例公网IP&gt;:5080/api/default/default/_json \
+  -d '[{&quot;level&quot;:&quot;info&quot;,&quot;job&quot;:&quot;web-api&quot;,&quot;log&quot;:&quot;GET /api/orders 200 in 34ms&quot;}]'
+</code></pre>
+<p>上报成功后会返回如下结果：</p>
+<pre><code class="language-json">{&quot;code&quot;:200,&quot;status&quot;:[{&quot;name&quot;:&quot;default&quot;,&quot;successful&quot;:1,&quot;failed&quot;:0}]}
+</code></pre>
+<h3 id="2_1">2. 查询与检索日志</h3>
+<p>数据到达后会自动创建数据流。在左侧导航栏选择 <strong>日志</strong>，选择数据流 <code>default</code> 并点击 <strong>查询</strong>，即可看到上报的日志事件、按日志级别着色的时间直方图，以及左侧自动识别出的字段（<code>job</code>、<code>level</code>、<code>log</code>）。您可以进一步使用过滤条件、SQL 模式和 VRL 函数细化查询结果。</p>
+<p><img alt="日志查询" src="../images/logs-query.png" /></p>
+<h2 id="_4">官方文档</h2>
+<p>更多信息请访问官方文档：<a href="https://openobserve.ai/docs/">OpenObserve 官方文档</a></p>
+        
+      </div>
+
+      <div class="copyrights">© 2009-2022 Aliyun.com 版权所有</div>
+    </div>
+  </div>
+  
+  <!--
+  MkDocs version      : 1.6.1
+  Docs Build Date UTC : 2026-08-13 03:18:50.963733+00:00
+  -->
+</body>
+</html>
